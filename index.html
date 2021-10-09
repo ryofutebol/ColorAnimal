@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="">
+    <title>Color Animal</title>
+    <style>
+      .App {
+        text-align: center;
+      }
+      .Button {
+        margin-top: 0px;
+        text-align: center;
+        width: 400px;
+        height: 70px;
+        font-size: 20px;
+        -webkit-appearance: none;
+        appearance: none;
+        border: none;
+        outline: none;
+        background-color: skyblue;
+        border-radius: 2px;
+        box-sizing: border-box;
+        color: #fff;
+        font-weight: bold;
+        padding: 14px 20px;
+        cursor: pointer;
+      }
+    </style>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+    <script>
+      try {
+        window.ethereum.enable();
+      } catch (err) {
+        window.location.href = 'https://news.mynavi.jp/cryptocurrency/metamask/';
+      }
+      let abi
+      let bytecode
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      let address = "0xBe22bB56111eE2Ac855DeBc6fC58A7586938824B"
+
+      fetch('./artifacts/ColorAnimal.json')
+        .then(response => response.json())
+        .then(data => {
+          abi = data.abi;
+          bytecode = data.bytecode;
+        }
+      );
+
+      const buttonMint = async() => {
+        const contract = new ethers.Contract(address, abi, provider);
+        const signer = provider.getSigner();
+        const data = await contract.connect(signer).claim();
+        console.log(data);
+      };
+
+    </script>
+  </head>
+  <body>
+    <div class="App">
+      <h1>What animals will appear?</h1>
+
+      <button class="Button" onclick="buttonMint()">Let's get it.</button><br/>
+    </div>
+  </body>
+</html>
